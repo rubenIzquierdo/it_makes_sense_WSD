@@ -11,6 +11,7 @@ This are the only two dependencies:
 
 ##Installation##
 The installation is pretty simple, just follow these steps:
+
 1. Go to the folder where you want to install this repository
 2. Clone this repository
 3. Clone the KafNafParserPy
