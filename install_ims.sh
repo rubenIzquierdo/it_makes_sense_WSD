@@ -1,6 +1,6 @@
 #!/bin/bash
 
-this_folder=$(dirname $0)
+this_folder=$(pwd)
 
 # This will download and install IMS to your local machine
 if [ -d 'ims' ]; 
@@ -12,10 +12,10 @@ fi
 wget http://www.comp.nus.edu.sg/~nlp/sw/IMS_v0.9.2.1.tar.gz
 tar xvzf IMS_v0.9.2.1.tar.gz
 rm IMS_v0.9.2.1.tar.gz
-chmod +x testPlain.bash 
 
 # For the library
 cd ims/
+chmod +x testPlain.bash
 wget http://www.comp.nus.edu.sg/~nlp/sw/lib.tar.gz
 tar xvzf lib.tar.gz
 rm lib.tar.gz
