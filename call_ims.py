@@ -15,7 +15,7 @@ from path_to_ims import PATH_TO_IMS
 
 
 
-DEBUG = False
+DEBUG = 0
 __encoding__ = 'utf-8'
 __this_name__ = 'It_Makes_Sense_WSD'
 __this_version__ = '0.1'
@@ -74,7 +74,7 @@ def parse_ims_annotated_sentence(this_line, list_token_ids):
     
     
     
-def call_as_subprocess(input_filename,force_lemma_pos):
+def call_as_subprocess(input_filename,is_there_pos):
     this_out = NamedTemporaryFile('w', delete = False)
     this_out.close()
     
@@ -84,10 +84,10 @@ def call_as_subprocess(input_filename,force_lemma_pos):
     cmd.append(this_out.name)
     cmd.append('lib/dict/index.sense')
     cmd.append('1 1') #is sentence splitted and tokenised
-    if force_lemma_pos:
-        cmd.append('1 1')
+    if is_there_pos:
+        cmd.append('1')
     else:
-        cmd.append('0 0')
+        cmd.append('0')
         
     this_ims = Popen(' '.join(cmd),  stdin=None, stdout=None, stderr = PIPE, shell = True, cwd = PATH_TO_IMS)
     return_code = this_ims.wait()
@@ -110,7 +110,7 @@ def call_as_subprocess(input_filename,force_lemma_pos):
         
         
     
-def call_ims(this_input, this_output, force_lemma_pos):
+def call_ims(this_input, this_output, use_pos,use_morphofeat):
     knaf_obj = KafNafParser(this_input)
 
     print>>sys.stderr,'Reading the input ...'
@@ -122,7 +122,12 @@ def call_ims(this_input, this_output, force_lemma_pos):
         span = term.get_span()
         if span is not None:
             for token_id in span.get_span_ids():
-                tid_term_pos_for_token_id[token_id] = (term.get_id(),term.get_lemma(),term.get_pos())
+                #tid_term_pos_for_token_id[token_id] = (term.get_id(),term.get_lemma(),term.get_pos())
+                if use_morphofeat:
+                    pos = term.get_morphofeat()
+                else:
+                    pos = term.get_pos()
+                tid_term_pos_for_token_id[token_id] = (term.get_id(),term.get_lemma(),pos)
     ###########################
     
 
@@ -152,9 +157,9 @@ def call_ims(this_input, this_output, force_lemma_pos):
     this_temp = NamedTemporaryFile('w', delete = False)    
     for sentence in sentences:
         for token_id, token_text in sentence:
-            if force_lemma_pos:
+            if use_pos or use_morphofeat:
                 term_id,lemma,pos = tid_term_pos_for_token_id[token_id]
-                this_temp.write(token_text.encode(__encoding__)+'/'+pos.encode(__encoding__)+'/'+lemma.encode(__encoding__)+' ')
+                this_temp.write(token_text.encode(__encoding__)+'/'+pos.encode(__encoding__)+' ')
             else:
                 this_temp.write(token_text.encode(__encoding__)+' ')
         this_temp.write('\n')
@@ -165,7 +170,7 @@ def call_ims(this_input, this_output, force_lemma_pos):
     # Calling to 
     ###########################
     print>>sys.stderr,'Calling to IMS at',PATH_TO_IMS,'...'
-    sentences_tagged = call_as_subprocess(this_temp.name,force_lemma_pos)
+    sentences_tagged = call_as_subprocess(this_temp.name,use_pos or use_morphofeat)
     os.remove(this_temp.name)
     ###########################
     
@@ -205,9 +210,11 @@ def call_ims(this_input, this_output, force_lemma_pos):
     
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Wrapper for the ItMakesSense WSD system that allows KAF/NAF as input and output formats',
-                                     usage='cat myfile.naf | '+sys.argv[0]+' [options]')
-    parser.add_argument('-force_lemma_pos', dest='force_lemma_pos', action='store_true', help='To force the use of lemma or pos of the input file and let IMS to decide')
-    
+                                     usage='cat myfile.naf | '+sys.argv[0]+' [-h] [-pos|-morphofeat]')
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument('-pos', dest='use_knaf_pos', action='store_true', help='Use the POS tags of the pos attribute in the input KAf/NAF file')
+    group.add_argument('-morphofeat', dest='use_knaf_morpho', action='store_true', help='Use the POS tags of the morphofeat attribute in the input KAf/NAF file')
+                                                    
     args = parser.parse_args()
     
     
@@ -216,6 +223,6 @@ if __name__ == '__main__':
         sys.exit(-1)
     else:
         # Reading from the standard input
-        call_ims(sys.stdin, sys.stdout, args.force_lemma_pos)
+        call_ims(sys.stdin, sys.stdout, use_pos = args.use_knaf_pos, use_morphofeat = args.use_knaf_morpho)
     
     

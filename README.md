@@ -40,7 +40,24 @@ bt a Pos-tagger usually). There is one example file in the repository, the file 
 cat input.kaf | python call_ims.py > output.kaf
 ```
 
+You can get the help of the script by running:
 
+```shell
+call_ims.py -h
+usage: cat myfile.naf | ./call_ims.py [-h] [-pos|-morphofeat]
+
+Wrapper for the ItMakesSense WSD system that allows KAF/NAF as input and
+output formats
+
+optional arguments:
+  -h, --help   show this help message and exit
+  -pos         Use the POS tags of the pos attribute in the input KAf/NAF file
+  -morphofeat  Use the POS tags of the morphofeat attribute in the input
+               KAf/NAF file
+```
+
+You can force to use the pos-tag labels found in the input KAF/NAF file by specifying the parameter -pos or -morphofeat, which will refer to the pos attributes or to the morphofeat attributes on the term layer.
+If you do not provide any of these parameters, the IMS will perform internally pos-tagging and lemmatisation (but the postags and lemmas in the input term layer will not be modified).
 
 ##Contact##
 * Ruben Izquierdo
