@@ -22,8 +22,8 @@ for your IMS installation). In this case, edit the file `path_to_ims.py` and mod
 This could be one example, given that you want to install this repository in `~/my_github`:
 ```shell
 cd ~/my_github
-git clone XXX
-cd IMS_WSD
+git clone https://github.com/rubenIzquierdo/it_makes_sense_WSD.git
+cd it_makes_sense_WSD
 install_ims.sh
 git clone https://github.com/cltl/KafNafParserPy
 ```
