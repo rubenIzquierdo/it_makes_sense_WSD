@@ -11,10 +11,10 @@ This are the only two dependencies:
 
 ##Installation##
 The installation is pretty simple, just follow these steps:
-1 Go to the folder where you want to install this repository
-2 Clone this repository
-3 Clone the KafNafParserPy
-4 Run `install_ims.sh` in the repository to download and install all the required files for the original IMS system
+1. Go to the folder where you want to install this repository
+2. Clone this repository
+3. Clone the KafNafParserPy
+4. Run `install_ims.sh` in the repository to download and install all the required files for the original IMS system
 
 You could skip the step number 4 in case that you have already the IMS system installed on your machine (you should make sure that the models folder is actually a subfolder of the main root folder
 for your IMS installation). In this case, edit the file `path_to_ims.py` and modify the variable PATH_TO_IMS to point to the correct path of IMS in your local machine.
