@@ -62,5 +62,6 @@ If you do not provide any of these parameters, the IMS will perform internally p
 ##Contact##
 * Ruben Izquierdo
 * Vrije University of Amsterdam
-* ruben.izquierdobevia@vu.nl
+* ruben.izquierdobevia@vu.nl  rubensanvi@gmail.com
+* http://rubenizquierdobevia.com/
 
