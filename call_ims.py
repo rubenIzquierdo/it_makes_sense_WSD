@@ -8,6 +8,7 @@ import sys
 import os
 import argparse
 import pprint
+from collections import defaultdict
 from subprocess import Popen, PIPE
 from KafNafParserPy import *
 from tempfile import NamedTemporaryFile
@@ -18,16 +19,32 @@ from path_to_ims import PATH_TO_IMS
 DEBUG = 0
 __encoding__ = 'utf-8'
 __this_name__ = 'It_Makes_Sense_WSD'
-__this_version__ = '0.1'
+__this_version__ = '0.2'
+__this_dir__ =  os.path.dirname(os.path.realpath(__file__))
+__wordnet171_path__ = __this_dir__+'/resources/WordNet-1.7.1'
+__wordnet171_index_sense = __wordnet171_path__+'/dict/index.sense'
 
 
+def load_skeys_for_words():
+    skeys_for_word = defaultdict(set)
+    if os.path.exists(__wordnet171_index_sense):
+        fd = open(__wordnet171_index_sense,'r')
+        for line in fd:
+            fields = line.strip().split()
+            skey = fields[0]
+            word_pos = skey[:skey.find('%')+2]
+            skeys_for_word[word_pos].add(skey)
+        fd.close()
+    else:
+        print>>sys.stderr,'Wordnet index.sense file not found at',__wordnet171_index_sense
+    return skeys_for_word
+        
 
 def parse_ims_annotation(this_annotation):
     # this annotation is like: <x length="1 interest%2:37:00::|0.3614994335108463 interest%2:42:00::|0.3229031978804859 interest%2:42:01::|0.3155973686086678">interested</x>'
     senses = []
     my_fields = this_annotation.split('"')
     list_senses = my_fields[1]
-    
     individual_senses = list_senses.split(' ')
     for individual_sense in individual_senses[1:]:
         sensekey, confidence = individual_sense.split('|')
@@ -165,6 +182,9 @@ def call_ims(this_input, this_output, use_pos,use_morphofeat):
         this_temp.write('\n')
     this_temp.close()
     ###########################
+    
+    ###Loading mapping from word to list of sensekeys
+    skeys_for_word = load_skeys_for_words()
 
     ###########################
     # Calling to 
@@ -178,9 +198,9 @@ def call_ims(this_input, this_output, use_pos,use_morphofeat):
     for n, sentence in enumerate(sentences_tagged):
         list_token_ids = [token_id for token_id, token_text in sentences[n]]
         senses_for_token_id = parse_ims_annotated_sentence(sentence,list_token_ids)
-        
         # Add the new information to the kaf/naf obj
         for token_id, senses in senses_for_token_id.items():
+            answered_for_this_token = set()
             term_id,_,_ = tid_term_pos_for_token_id[token_id]   # termid, lemma, pos
             for sensekey, confidence in senses:
                 new_ext_ref = CexternalReference()
@@ -188,6 +208,25 @@ def call_ims(this_input, this_output, use_pos,use_morphofeat):
                 new_ext_ref.set_confidence(confidence)
                 new_ext_ref.set_resource('ItMakesSense#WN-1.7.1')
                 knaf_obj.add_external_reference_to_term(term_id, new_ext_ref)
+                answered_for_this_token.add(sensekey)
+                
+            ##Adding the rest of possible skeys with probability 0
+            possible_skeys = set()
+            for answered_sense in answered_for_this_token:
+                word_pos = answered_sense[:answered_sense.find('%')+2]
+                possible_skeys = possible_skeys | skeys_for_word.get(word_pos,set())
+            
+            for possible_skey in possible_skeys:
+                if possible_skey not in answered_for_this_token:
+                    new_ext_ref = CexternalReference()
+                    new_ext_ref.set_reference(possible_skey)
+                    new_ext_ref.set_confidence('0')
+                    new_ext_ref.set_resource('ItMakesSense#WN-1.7.1')
+                    knaf_obj.add_external_reference_to_term(term_id, new_ext_ref)
+            ##################
+        
+        
+        
                 
         
         if DEBUG:
