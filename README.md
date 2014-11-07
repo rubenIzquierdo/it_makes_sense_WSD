@@ -62,7 +62,7 @@ optional arguments:
 You can force to use the pos-tag labels found in the input KAF/NAF file by specifying the parameter -pos or -morphofeat, which will refer to the pos attributes or to the morphofeat attributes on the term layer.
 If you do not provide any of these parameters, the IMS will perform internally pos-tagging and lemmatisation (but the postags and lemmas in the input term layer will not be modified). The
 parameter `-ili30` would generate WordNet3.0 synsets instead of sensekeys of WordNet1.7.1. For instance:
-```shell
+```xml
     <term lemma="bit" morphofeat="NN" pos="N" tid="t19" type="open">
       <span>
         <target id="w19"/>
