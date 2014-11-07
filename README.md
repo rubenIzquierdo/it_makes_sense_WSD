@@ -8,6 +8,8 @@ This are the only two dependencies:
 * KafNafParserPy library, that can be found at https://github.com/cltl/KafNafParserPy
 * IMS system that can be found at http://www.comp.nus.edu.sg/~nlp/software.html
 
+In case you want to use ILI synsets of WN30 instead of sensekeys of WN171 you should get also the mappings between
+version provided by the UPC (http://www.talp.upc.edu/index.php/technology/tools/45-textual-processing-tools/98-wordnet-mappings/)
 
 ##Installation##
 The installation is pretty simple, just follow these steps:
@@ -26,7 +28,6 @@ cd ~/my_github
 git clone https://github.com/rubenIzquierdo/it_makes_sense_WSD.git
 cd it_makes_sense_WSD
 install_ims.sh
-git clone https://github.com/cltl/KafNafParserPy
 ```
 
 ##Usage##
@@ -51,13 +52,35 @@ output formats
 
 optional arguments:
   -h, --help   show this help message and exit
+  -ili30       Map skeys of WN171 provided by the system to ili synsets of
+               WN30
   -pos         Use the POS tags of the pos attribute in the input KAf/NAF file
   -morphofeat  Use the POS tags of the morphofeat attribute in the input
                KAf/NAF file
 ```
 
 You can force to use the pos-tag labels found in the input KAF/NAF file by specifying the parameter -pos or -morphofeat, which will refer to the pos attributes or to the morphofeat attributes on the term layer.
-If you do not provide any of these parameters, the IMS will perform internally pos-tagging and lemmatisation (but the postags and lemmas in the input term layer will not be modified).
+If you do not provide any of these parameters, the IMS will perform internally pos-tagging and lemmatisation (but the postags and lemmas in the input term layer will not be modified). The
+parameter `-ili30` would generate WordNet3.0 synsets instead of sensekeys of WordNet1.7.1. For instance:
+```shell
+    <term lemma="bit" morphofeat="NN" pos="N" tid="t19" type="open">
+      <span>
+        <target id="w19"/>
+      </span>
+      <externalReferences>
+        <externalRef confidence="0.3391744933419935" reference="bit%1:23:01::" resource="ItMakesSense#WN-1.7.1"/>
+        <externalRef confidence="0.16435686275758304" reference="bit%1:28:00::" resource="ItMakesSense#WN-1.7.1"/>
+	...
+===========
+    <term lemma="bit" morphofeat="NN" pos="N" tid="t19" type="open">
+      <span>
+        <target id="w19"/>
+      </span>
+      <externalReferences>
+        <externalRef confidence="0.3391744933419935" reference="ili-30-13761407-n" resource="WordNet-3.0"/>
+        <externalRef confidence="0.16435686275758304" reference="ili-30-15246853-n" resource="WordNet-3.0"/>>
+	...
+```
 
 ##Contact##
 * Ruben Izquierdo
