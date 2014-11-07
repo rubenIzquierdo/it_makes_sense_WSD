@@ -43,3 +43,6 @@ tar xzf mappings.tgz
 mv mappings-upc-2007/ mappings-upc
 rm mappings.tgz
 cd ..
+
+#For the KafNafPArserPy
+git clone https://github.com/cltl/KafNafParserPy.git

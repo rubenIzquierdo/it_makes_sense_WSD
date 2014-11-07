@@ -105,7 +105,7 @@ def call_as_subprocess(input_filename,is_there_pos):
     this_out = NamedTemporaryFile('w', delete = False)
     this_out.close()
     
-    cmd = ['testPlain.bash']
+    cmd = ['./testPlain.bash']
     cmd.append('models')    ##models folder must be inside the ims folder
     cmd.append(input_filename)
     cmd.append(this_out.name)
