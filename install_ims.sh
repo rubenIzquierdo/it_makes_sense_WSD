@@ -36,8 +36,10 @@ cd resources
 wget http://wordnetcode.princeton.edu/1.7.1/WordNet-1.7.1.tar.gz
 tar xvzf WordNet-1.7.1.tar.gz
 rm WordNet-1.7.1.tar.gz
+
+#For the mappings between wn versions
+wget -O mappings.tgz http://nlp.lsi.upc.edu/tools/download-map.php mappings.tgz
+tar xzf mappings.tgz
+mv mappings-upc-2007/ mappings-upc
+rm mappings.tgz
 cd ..
-
-
-
-
