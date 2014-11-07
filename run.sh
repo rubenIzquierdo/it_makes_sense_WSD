@@ -2,4 +2,5 @@
 
 root=`dirname $0`
 
-$root/call_ims.py 
+#Setting the output to be ili-wn30 synsets instead of sensekeys
+$root/call_ims.py -ili30

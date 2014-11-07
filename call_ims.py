@@ -328,6 +328,7 @@ def call_ims(this_input, this_output, use_pos,use_morphofeat,map_to_wn30):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Wrapper for the ItMakesSense WSD system that allows KAF/NAF as input and output formats',
                                      usage='cat myfile.naf | '+sys.argv[0]+' [-h] [-pos|-morphofeat]')
+    parser.add_argument('-ili30', dest='map_to_wn_30', action='store_true',help='Map skeys of WN171 provided by the system to ili synsets of WN30')
     group = parser.add_mutually_exclusive_group()
     group.add_argument('-pos', dest='use_knaf_pos', action='store_true', help='Use the POS tags of the pos attribute in the input KAf/NAF file')
     group.add_argument('-morphofeat', dest='use_knaf_morpho', action='store_true', help='Use the POS tags of the morphofeat attribute in the input KAf/NAF file')
@@ -340,6 +341,6 @@ if __name__ == '__main__':
         sys.exit(-1)
     else:
         # Reading from the standard input
-        call_ims(sys.stdin, sys.stdout, use_pos = args.use_knaf_pos, use_morphofeat = args.use_knaf_morpho, map_to_wn30 = True)
+        call_ims(sys.stdin, sys.stdout, use_pos = args.use_knaf_pos, use_morphofeat = args.use_knaf_morpho, map_to_wn30 = args.map_to_wn_30)
     
     
