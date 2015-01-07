@@ -288,6 +288,7 @@ def call_ims(this_input, this_output, use_pos,use_morphofeat,map_to_wn30):
             answered_for_this_token = set()
             if not token_id in tid_term_pos_for_token_id:
                 print>>sys.stderr,'WARNING!!! Token id:',token_id,' Senses:', senses, ' Not found in any term !!!'
+                continue
             term_id,_,_ = tid_term_pos_for_token_id[token_id]   # termid, lemma, pos
             for sensekey, confidence in senses:
                 new_ext_ref = CexternalReference()
