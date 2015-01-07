@@ -103,6 +103,9 @@ def parse_ims_annotated_sentence(this_line, list_tokens, list_token_ids):
     
     #We obtain for each new token what is the identifier in the original tokens (all lists are aligned)
     mapped_token_ids = align_lists(list_tokens,list_token_ids,new_tokens)
+    if mapped_token_ids is None:
+        print>>sys.stderr,'ERROR!!! Matching tokens', list_tokens, list_token_ids,' SKIP!'
+        return {}
     
     #Finally we create the object for each token id the list of possible senses
     for n in range(len(new_tokens)):
@@ -149,7 +152,6 @@ def call_as_subprocess(input_filename,is_there_pos):
         f_in.close()
     
     os.remove(this_out.name)
-    print sentences_tagged
     return sentences_tagged
         
         
@@ -284,6 +286,8 @@ def call_ims(this_input, this_output, use_pos,use_morphofeat,map_to_wn30):
         # Add the new information to the kaf/naf obj
         for token_id, senses in senses_for_token_id.items():
             answered_for_this_token = set()
+            if not token_id in tid_term_pos_for_token_id:
+                print>>sys.stderr,'WARNING!!! Token id:',token_id,' Senses:', senses, ' Not found in any term !!!'
             term_id,_,_ = tid_term_pos_for_token_id[token_id]   # termid, lemma, pos
             for sensekey, confidence in senses:
                 new_ext_ref = CexternalReference()

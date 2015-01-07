@@ -27,7 +27,6 @@ def align_lists(l1,ids,l2):
             print>>sys.stderr,'Impossible to match #'+this_ele+'# with #'+string_compare+'#'
             ids2 = None
             break
-        print this_ele, ids[pos1], string_compare
         ids2.append(ids[pos1])
       
         offset1 = offset1 + len(this_ele)
