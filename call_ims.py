@@ -18,7 +18,7 @@ from path_to_ims import PATH_TO_IMS
 
 
 
-
+os.environ['LC_ALL'] = 'en_US.UTF-8' 
 DEBUG = 0
 __encoding__ = 'utf-8'
 __this_name__ = 'It_Makes_Sense_WSD'

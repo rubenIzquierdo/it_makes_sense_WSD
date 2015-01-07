@@ -24,7 +24,7 @@ def align_lists(l1,ids,l2):
         ele_to_compare = l1[pos1].replace(' ','')
         string_compare = ele_to_compare[offset1:offset1+len(this_ele)]
         if this_ele != string_compare:
-            print>>sys.stderr,'Impossible to match #'+this_ele+'# with #'+string_compare+'#'
+            print>>sys.stderr,'Impossible to match #'+this_ele.encode('utf-8')+'# with #'+string_compare.encode('utf-8')+'#'
             ids2 = None
             break
         ids2.append(ids[pos1])
