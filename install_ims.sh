@@ -12,6 +12,7 @@ fi
 wget http://www.comp.nus.edu.sg/~nlp/sw/IMS_v0.9.2.1.tar.gz
 tar xvzf IMS_v0.9.2.1.tar.gz
 rm IMS_v0.9.2.1.tar.gz
+mv ims_0.9.2.1 ims
 
 # For the library
 cd ims/
