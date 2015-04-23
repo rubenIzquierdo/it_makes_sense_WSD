@@ -82,6 +82,32 @@ parameter `-ili30` would generate WordNet3.0 synsets instead of sensekeys of Wor
 	...
 ```
 
+##Creating IMS training data from KAF/NAF##
+
+You can create training data for training your own models with IMS with the script `convert_to_ims_training_format.py`. Calling to this
+script with the option -h will provide you with the description of the parameters:
+```shell
+convert_to_ims_training_format.py -h
+usage: convert_to_ims_training_format.py [-h] [-v] (-f FILE | -l FILE_PATHS)
+                                         -o OUTPUT
+
+Creates IMS training file from KAF/NAF files
+
+optional arguments:
+  -h, --help     show this help message and exit
+  -v, --version  show program's version number and exit
+  -f FILE        Single KAF/NAF file
+  -l FILE_PATHS  File with a list of paths to KAF/NAF files
+  -o OUTPUT      Output folder
+```
+
+The input can be either a single KAF/NAF file (`-f` option), or a file which contains a list of paths to KAF/NAF files (one per file, option `-l`). The output
+parameter `-o` specifies the folder where you want to store all the training files. This script will generate two files for every lemma, one with the instances
+and contexts for training, and one with the key senses. All the files will be stored in the output folder. Besides to this folder, a file will be generated
+with the same name of the folder and the suffix `.word_list`. This file contains all the lemmas (without suffices) that have been generated, so it can be used
+later to train the models by using the `train_one.bash` script provided with the IMS package.
+
+
 ##Contact##
 * Ruben Izquierdo
 * Vrije University of Amsterdam
