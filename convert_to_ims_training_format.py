@@ -68,7 +68,7 @@ class Cinstance:
         
         
 
-def add_file(filename, data_lexelt, reftype='synset'):
+def add_file(filename, data_lexelt, reftype='lexical_key'):
     obj = KafNafParser(filename)
     tokens_per_sent = {}
     sent_for_token = {}
@@ -85,9 +85,13 @@ def add_file(filename, data_lexelt, reftype='synset'):
     for term in obj.get_terms():
         synset_label = None
         for ext_ref in term.get_external_references():
-            if ext_ref.get_reftype() == reftype:
+            if ext_ref.get_reftype() == 'lexical_key':
+                synset_label = term.get_lemma()+'%'+ext_ref.get_reference()
+            elif ext_ref.get_reftype() == 'sense' and ext_ref.get_resource() == 'WordNet-3.0':
                 synset_label = ext_ref.get_reference()
-                break
+            if synset_label is not None:
+                break    
+
         if synset_label is not None:
             annotated_lemmas.append((filename+'#'+term.get_id(), term.get_span().get_span_ids(), term.get_lemma(), term.get_pos(), synset_label))
             

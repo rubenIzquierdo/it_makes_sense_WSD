@@ -16,6 +16,10 @@ from tempfile import NamedTemporaryFile
 from align import align_lists #def align_lists(l1,ids,l2):
 from path_to_ims import PATH_TO_IMS
 
+##Change these variables if you want to use your own trained models
+ims_models = '/home/izquierdo/ruben_github/it_makes_sense_WSD/ims/semcor30_wngloss_models' 
+wordnet_dict_folder = '/home/izquierdo/wordnets/wordnet-3.0/dict/index.sense' 
+        
 
 
 os.environ['LC_ALL'] = 'en_US.UTF-8' 
@@ -53,6 +57,7 @@ def load_skeys_for_words():
 
 def parse_ims_annotation(this_annotation):
     # this annotation is like: <x length="1 interest%2:37:00::|0.3614994335108463 interest%2:42:00::|0.3229031978804859 interest%2:42:01::|0.3155973686086678">interested</x>'
+    print this_annotation
     senses = []
     my_fields = this_annotation.split('"')
     list_senses = my_fields[1]
@@ -128,16 +133,18 @@ def call_as_subprocess(input_filename,is_there_pos):
     this_out.close()
     
     cmd = ['./testPlain.bash']
-    cmd.append('models')    ##models folder must be inside the ims folder
+    #cmd.append('models')    ##models folder must be inside the ims folder
+    #cmd.append('/home/izquierdo/ruben_github/it_makes_sense_WSD/ims/model_semcor30_lexkey')
+    cmd.append(ims_models)
     cmd.append(input_filename)
     cmd.append(this_out.name)
-    cmd.append('lib/dict/index.sense')
+    cmd.append('wordnet_dict_folder')
     cmd.append('1 1') #is sentence splitted and tokenised
     if is_there_pos:
         cmd.append('1')
     else:
         cmd.append('0')
-        
+    print cmd
     this_ims = Popen(' '.join(cmd),  stdin=None, stdout=None, stderr = PIPE, shell = True, cwd = PATH_TO_IMS)
     return_code = this_ims.wait()
 

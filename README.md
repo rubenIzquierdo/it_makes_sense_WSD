@@ -108,6 +108,17 @@ with the same name of the folder and the suffix `.word_list`. This file contains
 later to train the models by using the `train_one.bash` script provided with the IMS package.
 
 
+##Trained models##
+
+You can find trained models using SemCor and the WordNet glosses (both with wordnet version 3.0) here: 
+http://kyoto.let.vu.nl/~izquierdo/ims_models/. You will need to download the models and modify the file
+`call_ims.py` to use the new models (you will need also the dict files of WordNet 3.0, as ItMakesSense
+uses these files). You will need to update these variables, at the top of the script:
+```
+ims_models = '/home/izquierdo/ruben_github/it_makes_sense_WSD/ims/semcor30_wngloss_models'     
+wordnet_dict_folder = '/home/izquierdo/wordnets/wordnet-3.0/dict/index.sense' 
+```
+
 ##Contact##
 * Ruben Izquierdo
 * Vrije University of Amsterdam
