@@ -18,6 +18,7 @@ from path_to_ims import PATH_TO_IMS
 
 ##Change these variables if you want to use your own trained models
 ims_models = '/home/izquierdo/ruben_github/it_makes_sense_WSD/ims/semcor30_wngloss_models' 
+#ims_models = '/home/izquierdo/ruben_github/it_makes_sense_WSD/ims/model_semcor30_lexkey'
 wordnet_dict_folder = '/home/izquierdo/wordnets/wordnet-3.0/dict/index.sense' 
         
 
@@ -40,8 +41,9 @@ VERB = 'verb'
 def load_skeys_for_words():
     skeys_for_word = defaultdict(set)
     skey_to_synset = defaultdict(set)
-    if os.path.exists(__wordnet171_index_sense):
-        fd = open(__wordnet171_index_sense,'r')
+    my_index = wordnet_dict_folder #__wordnet171_index_sense
+    if os.path.exists(my_index):    
+        fd = open(my_index,'r')
         for line in fd:
             fields = line.strip().split()
             skey = fields[0]
@@ -57,7 +59,6 @@ def load_skeys_for_words():
 
 def parse_ims_annotation(this_annotation):
     # this annotation is like: <x length="1 interest%2:37:00::|0.3614994335108463 interest%2:42:00::|0.3229031978804859 interest%2:42:01::|0.3155973686086678">interested</x>'
-    print this_annotation
     senses = []
     my_fields = this_annotation.split('"')
     list_senses = my_fields[1]
@@ -138,16 +139,14 @@ def call_as_subprocess(input_filename,is_there_pos):
     cmd.append(ims_models)
     cmd.append(input_filename)
     cmd.append(this_out.name)
-    cmd.append('wordnet_dict_folder')
+    cmd.append(wordnet_dict_folder)
     cmd.append('1 1') #is sentence splitted and tokenised
     if is_there_pos:
         cmd.append('1')
     else:
         cmd.append('0')
-    print cmd
     this_ims = Popen(' '.join(cmd),  stdin=None, stdout=None, stderr = PIPE, shell = True, cwd = PATH_TO_IMS)
     return_code = this_ims.wait()
-
     sentences_tagged = []
     if return_code != 0:
         print>>sys.stderr,'Error with IMS at',PATH_TO_IMS
@@ -307,7 +306,8 @@ def call_ims(this_input, this_output, use_pos,use_morphofeat,map_to_wn30):
                     resource = 'WordNet-3.0'
                 else:
                     reference = sensekey
-                    resource = 'ItMakesSense#WN-1.7.1'
+                    #resource = 'ItMakesSense#WN-1.7.1'
+                    resource = 'IMS_WN30+WN_Gloss30'
                 
                 if reference is not None:
                     new_ext_ref.set_reference(reference)
@@ -332,7 +332,8 @@ def call_ims(this_input, this_output, use_pos,use_morphofeat,map_to_wn30):
                         resource = 'WordNet-3.0'
                     else:
                         reference = possible_skey
-                        resource = 'ItMakesSense#WN-1.7.1'
+                        #resource = 'ItMakesSense#WN-1.7.1'
+                        resource = 'IMS_WN30+WN_Gloss30'
                 
                     if reference is not None:
                         new_ext_ref.set_reference(reference)
